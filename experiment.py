@@ -9,25 +9,26 @@ from datamanager import DataManager
 from trainer import Trainer
 from tester import Tester
 
+utils.nasdaq100.remove('FISV')
 parser = argparse.ArgumentParser()
 parser.add_argument("--tickers", nargs="+", default=utils.nasdaq100[:90])
-parser.add_argument("--train_start", type=str, default="2021-07-01")
-parser.add_argument("--train_end", type=str, default="2023-02-28")
+parser.add_argument("--train_start", type=str, default="2021-01-01")
+parser.add_argument("--train_end", type=str, default="2022-03-20") 
 parser.add_argument("--test_start", type=str, default="2022-03-20")
 parser.add_argument("--test_end", type=str, default="2023-02-28")
-parser.add_argument("--seed", type=int, default=3)
+parser.add_argument("--seed", type=int, default=2)
 parser.add_argument("--lr1", type=float, default=1e-5)
 parser.add_argument("--lr2", type=float, default=5e-5)
 parser.add_argument("--lr3", type=float, default=1e-4)
 parser.add_argument("--tau", type=float, default=0.005)
-parser.add_argument("--alpha", type=float, default=2.5)
+parser.add_argument("--alpha", type=float, default=2.2)
 parser.add_argument("--episode", type=float, default=2000)
 parser.add_argument("--gamma", type=float, default=0.9)
-parser.add_argument("--batch_size", type=float, default=128)
-parser.add_argument("--memory_size", type=float, default=50000)
+parser.add_argument("--batch_size", type=float, default=512)
+parser.add_argument("--memory_size", type=float, default=100000)
 parser.add_argument("--balance", type=float, default=14560.05)
 parser.add_argument("--holding", type=float, default=5)
-parser.add_argument("--cons", type=bool, default=True)
+parser.add_argument("--cons", type=bool, default=False)
 args = parser.parse_args()
 
 path = os.getcwd() + f"/Metrics/seed{args.seed}"

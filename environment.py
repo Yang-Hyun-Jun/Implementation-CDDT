@@ -21,13 +21,16 @@ class Environment(pmenv.Environment):
     def step(self, action, sample):
         next_observation, reward, done = super().step(action)
         next_state = self.get_state(next_observation, self.portfolio)
-        cost = np.array([self.get_cost()])
+        cost = np.array([self.get_cost(sample)])
         return next_state, reward, cost, done
 
-    def get_cost(self):
-        cost = 1 if self.profitloss < -1.5 else 0
+    def get_cost(self, p):
+        """
+        Constrained Optimization을 위한 Cost 함수
+        """
+        cost = 1 if p[0] <= 0.003 else 0 
         return cost
-
+    
     def get_state(self, observation, portfolio):
         """
         Price, Portfolio, Cushion으로 State 인코딩 

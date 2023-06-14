@@ -5,3 +5,4 @@ import viz
 import torch
 
 viz.show(1, 5, size=(20,8))
+

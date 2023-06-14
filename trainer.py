@@ -92,7 +92,7 @@ class Trainer:
                     pd.DataFrame({"Profitloss":profitlosses}).to_csv(self.path + "/Profitloss_Train")
                     pd.DataFrame({"PV":portfolio_values}).to_csv(self.path + "/Portfolio_Value_Train")
                     pd.DataFrame({"Jr":Jrs}).to_csv(self.path + "/Jr")
-                    pd.DataFrame({"Jc":Jrs}).to_csv(self.path + "/Jc")
+                    pd.DataFrame({"Jc":Jcs}).to_csv(self.path + "/Jc")
                     self.save_actor()
                     self.save_model()
                 
