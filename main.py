@@ -24,7 +24,7 @@ parser.add_argument("--batch_size", type=float, default=512)
 parser.add_argument("--memory_size", type=float, default=100000)
 parser.add_argument("--balance", type=float, default=14560.05)
 parser.add_argument("--holding", type=float, default=5)
-parser.add_argument("--cons", type=bool, default=True)
+parser.add_argument("--cons", type=bool, default=False)
 args = parser.parse_args()
 
 train_data = np.load('Data/train_data_tensor_90.npy')

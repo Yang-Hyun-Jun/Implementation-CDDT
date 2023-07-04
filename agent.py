@@ -42,20 +42,18 @@ class Agent:
         entropy = self.net.entropy(s).unsqueeze(1)
         ratio = torch.exp(log_pi_ - log_pi)
 
-        # State Value Loss
+        # Critic Loss
         with torch.no_grad():
             next_value = self.target_net.value(ns)
             v_target = r + self.gamma * next_value * (1-done)
             v_target = v_target * torch.clamp(ratio.detach(), 1-eps_clip, 1+eps_clip)
-        
-        value = self.net.value(s)
-        v_loss = self.huber(value, v_target)
 
-        # Cost Value Loss
-        with torch.no_grad():
             next_c_value = self.target_net.c_value(ns)
             c_target = c + self.gamma * next_c_value * (1-done)
             c_target = c_target * torch.clamp(ratio.detach(), 1-eps_clip, 1+eps_clip)
+
+        value = self.net.value(s)
+        v_loss = self.huber(value, v_target)
 
         c_value = self.net.c_value(s)
         c_loss = self.huber(c_value, c_target)
