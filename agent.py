@@ -59,8 +59,10 @@ class Agent:
         c_loss = self.huber(c_value, c_target)
 
         # Actor loss
-        td_advantage_r = r + self.gamma * self.net.value(ns) * (1-done) - value
-        td_advantage_c = c + self.gamma * self.net.c_value(ns) * (1-done) - c_value
+        # td_advantage_r = r + self.gamma * self.net.value(ns) * (1-done) - value
+        # td_advantage_c = c + self.gamma * self.net.c_value(ns) * (1-done) - c_value
+        td_advantage_r = r + self.gamma * self.net.value(ns) * (1-done)
+        td_advantage_c = c + self.gamma * self.net.c_value(ns) * (1-done) 
         td_advantage = (td_advantage_r - self.lam * td_advantage_c).detach()
 
         surr1 = ratio * td_advantage

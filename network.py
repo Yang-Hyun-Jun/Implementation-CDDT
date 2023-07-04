@@ -12,27 +12,27 @@ class Network(nn.Module):
         self.F = F
 
         self.score_net = nn.Sequential(
-            nn.Linear(F * K, 64),
+            nn.Linear(F * K, 512),
             nn.LeakyReLU(),
-            nn.Linear(64, 64),
+            nn.Linear(512, 256),
             nn.LeakyReLU(),
-            nn.Linear(64, K),
+            nn.Linear(256, K),
             )
 
         self.value_net = nn.Sequential(
-            nn.Linear(F * K , 128),
+            nn.Linear(F * K , 512),
             nn.LeakyReLU(),
-            nn.Linear(128, 128),
+            nn.Linear(512, 256),
             nn.LeakyReLU(),
-            nn.Linear(128, 1),            
+            nn.Linear(256, 1),            
             )
 
         self.const_net = nn.Sequential(
-            nn.Linear(F * K, 64),
+            nn.Linear(F * K, 512),
             nn.LeakyReLU(),
-            nn.Linear(64, 64),
+            nn.Linear(512, 256),
             nn.LeakyReLU(),
-            nn.Linear(64, 1),
+            nn.Linear(256, 1),
             )
 
     def forward(self, x):
