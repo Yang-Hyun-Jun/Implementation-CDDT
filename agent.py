@@ -35,12 +35,12 @@ class Agent:
             action = (sample - p)[1:]
         return action, sample, log_pi
 
-    def update(self, s, p, r, c, ns, log_prob, done):
+    def update(self, s, p, r, c, ns, log_pi, done):
         
         eps_clip = 0.2
         log_pi_ = self.net.log_prob(s, p).unsqueeze(1)
         entropy = self.net.entropy(s).unsqueeze(1)
-        ratio = torch.exp(log_pi_ - log_prob)
+        ratio = torch.exp(log_pi_ - log_pi)
 
         # State Value Loss
         with torch.no_grad():

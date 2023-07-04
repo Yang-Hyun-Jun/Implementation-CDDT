@@ -13,12 +13,12 @@ from utils import tensorize, make_batch
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--seed", type=int, default=1)
-parser.add_argument("--lr1", type=float, default=4e-6)
-parser.add_argument("--lr2", type=float, default=4e-6)
+parser.add_argument("--lr1", type=float, default=1e-5)
+parser.add_argument("--lr2", type=float, default=1e-5)
 parser.add_argument("--lr3", type=float, default=1e-4)
 parser.add_argument("--tau", type=float, default=0.005)
 parser.add_argument("--alpha", type=float, default=2.2)
-parser.add_argument("--episode", type=float, default=100)
+parser.add_argument("--episode", type=float, default=2000)
 parser.add_argument("--gamma", type=float, default=0.9)
 parser.add_argument("--batch_size", type=float, default=512)
 parser.add_argument("--memory_size", type=float, default=100000)
@@ -112,10 +112,10 @@ if __name__ == '__main__':
                 print(f"a_loss:{a_loss}")
                 print(f"v_loss:{v_loss}")
                 print(f"c_loss:{c_loss}")
-                print(f"cum c:{cumc}")
-                print(f"cum r:{cumr}")
-                print(f"log prob:{log_pi}")
-                print(f"profitloss:{env.profitloss}\n")
+                print(f"cumc:{cumc}")
+                print(f"cumr:{cumr}")
+                print(f"log pi:{log_pi}")
+                print(f"pf:{env.profitloss}\n")
                 break
 
 
@@ -160,11 +160,5 @@ if __name__ == '__main__':
             pd.DataFrame(POs).to_csv(f'Metrics/seed{args.seed}/Portfolios_Test_{mode}')
             break
 
-            
-
-
-
-
-
-
+        
 viz.show(args.seed, size=(20,8))
