@@ -37,11 +37,11 @@ def show(seed_from=None, seed_to=None, benchmark=None, size=(5,5)):
     cl2 = "C0"
     cl3 = "C2"
 
-    # plt.figure(figsize=size)
-    # plt.fill_between(x=np.arange(expect_mean.shape[0]), y1=expect_mean + beta * std_mean, y2=expect_mean - beta * std_mean, alpha=0.3, color=cl1)
-    # plt.plot(expect_mean, label="mean", color=cl1)
-    # plt.xticks(rotation=45, fontsize=20)
-    # plt.yticks(fontsize=20)
+    plt.figure(figsize=size)
+    plt.fill_between(x=np.arange(expect_mean.shape[0]), y1=expect_mean + beta * std_mean, y2=expect_mean - beta * std_mean, alpha=0.3, color=cl1)
+    plt.plot(expect_mean, label="mean", color=cl1)
+    plt.xticks(rotation=45, fontsize=20)
+    plt.yticks(fontsize=20)
 
     plt.fill_between(x=np.arange(expect_mode.shape[0]), y1=expect_mode + beta * std_mode, y2=expect_mode - beta * std_mode, alpha=0.3, color=cl2)
     plt.plot(expect_mode, label="mode", color=cl2)

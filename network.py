@@ -12,7 +12,7 @@ class Network(nn.Module):
         self.F = F
 
         self.score_net = nn.Sequential(
-            nn.Linear((F + 1) * K, 64),
+            nn.Linear(F * K, 64),
             nn.LeakyReLU(),
             nn.Linear(64, 64),
             nn.LeakyReLU(),
@@ -20,15 +20,15 @@ class Network(nn.Module):
             )
 
         self.value_net = nn.Sequential(
-            nn.Linear((F + 1) * K , 64),
+            nn.Linear(F * K , 128),
             nn.LeakyReLU(),
-            nn.Linear(64, 64),
+            nn.Linear(128, 128),
             nn.LeakyReLU(),
-            nn.Linear(64, 1),
+            nn.Linear(128, 1),            
             )
 
         self.const_net = nn.Sequential(
-            nn.Linear((F + 1) * K, 64),
+            nn.Linear(F * K, 64),
             nn.LeakyReLU(),
             nn.Linear(64, 64),
             nn.LeakyReLU(),
@@ -54,7 +54,7 @@ class Network(nn.Module):
         """
         Expected Sum of Cost
         """
-        state = state.reshape(-1, (self.F + 1) * self.K)
+        state = state.reshape(-1, self.F * self.K)
         c = self.const_net(state)
         return c
 
@@ -62,7 +62,7 @@ class Network(nn.Module):
         """
         Critic의 Value
         """
-        state = state.reshape(-1, (self.F + 1) * self.K)
+        state = state.reshape(-1, self.F * self.K)
         v = self.value_net(state)
         return v
 
@@ -70,7 +70,7 @@ class Network(nn.Module):
         """
         Dirichlet Dist의 Concentration Parameter
         """
-        state = state.reshape(-1, (self.F + 1) * self.K)
+        state = state.reshape(-1, self.F * self.K)
         scores = self(state).reshape(-1, self.K)
         scores = torch.clamp(scores, -40., 500.)
         alpha = torch.exp(scores) + 1
@@ -84,7 +84,7 @@ class Network(nn.Module):
         dirichlet = Dirichlet(alpha)
         return dirichlet.log_prob(portfolio)
 
-    def sampling(self, state, repre=False):
+    def sampling(self, state, mode=False):
         """
         Dirichlet Dist에서 포트폴리오 샘플링
         """
@@ -95,17 +95,17 @@ class Network(nn.Module):
         B = alpha.shape[0]  
         N = alpha.shape[1]  
 
-        if repre == "mean":
+        if mode == "mean":
             sampled_p = dirichlet.mean
 
-        elif repre == "mode":
+        elif mode == "mode":
             sampled_p = dirichlet.mode
 
-        elif repre == "BH":
+        elif mode == "BH":
             sampled_p = torch.ones(size=(N,)) / N
             sampled_p = sampled_p.to("cuda")
 
-        elif not repre:
+        elif not mode:
             sampled_p = dirichlet.sample([1])[0]
         
         return sampled_p

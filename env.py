@@ -18,10 +18,10 @@ class Environment(pmenv.Environment):
         state = self.get_state(observation, self.portfolio)
         return state
 
-    def step(self, action, sample):
+    def step(self, action, sample=None):
         next_observation, reward, done = super().step(action)
         next_state = self.get_state(next_observation, self.portfolio)
-        cost = np.array([self.get_cost(sample)])
+        cost = None if sample is None else np.array([self.get_cost(sample)])
         return next_state, reward, cost, done
 
     def get_cost(self, p):

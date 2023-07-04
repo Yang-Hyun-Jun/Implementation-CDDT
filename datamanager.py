@@ -40,31 +40,22 @@ class DataManager(pmenv.DataManager):
         return data
     
 if __name__ == "__main__":
-    tickers = ['COST', 'INCY', "REGN"]
+    import utils
+    import numpy as np
 
-    train_start = "2019-01-02"
-    train_end = "2021-06-30"
+    utils.nasdaq100.remove('FISV')
+    tickers = utils.nasdaq100[:90]
 
-    valid_start = "2021-07-01"
-    valid_end = "2022-06-30" 
+    train_start = "2021-01-01"
+    train_end = "2022-03-20"
 
-    test_start = "2022-07-01" 
-    test_end = "2023-01-31"
-    
+    test_start = "2022-03-20" 
+    test_end = "2023-02-28"
+
     datamanager = DataManager()
-    data1 = datamanager.get_data(tickers[0], start_date=train_start, end_date=train_end)
-    data2 = datamanager.get_data(tickers[1], start_date=train_start, end_date=train_end)
-    data3 = datamanager.get_data(tickers[2], start_date=train_start, end_date=train_end)
-
     train_data_tensor = datamanager.get_data_tensor(tickers, train_start, train_end)
-    valid_data_tensor = datamanager.get_data_tensor(tickers, valid_start, valid_end)
     test_data_tensor = datamanager.get_data_tensor(tickers, test_start, test_end)
-    full_data_tensor = datamanager.get_data_tensor(tickers, valid_start, test_end)
 
-    print(data1)
-    print(data2)
-    print(data3)
-    print(train_data_tensor.shape)
-    print(valid_data_tensor.shape)
-    print(test_data_tensor.shape)
-    print(full_data_tensor.shape)
+    np.save('train_data_tensor_90.npy', train_data_tensor)
+    np.save('test_data_tensor_90.npy', test_data_tensor)
+    
