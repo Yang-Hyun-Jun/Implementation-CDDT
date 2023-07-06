@@ -68,7 +68,7 @@ class Agent:
         surr1 = ratio * td_advantage
         surr2 = torch.clamp(ratio, 1-eps_clip, 1+eps_clip) * td_advantage
 
-        a_loss = -torch.min(surr1, surr2) - 0.1 * entropy
+        a_loss = -torch.min(surr1, surr2) - 0.01 * entropy
         a_loss = a_loss.mean()
         
         # Update

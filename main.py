@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import wandb
 import argparse
 import torch
 import utils
@@ -13,14 +14,14 @@ from utils import tensorize, make_batch
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--seed", type=int, default=1)
-parser.add_argument("--lr1", type=float, default=1e-5)
-parser.add_argument("--lr2", type=float, default=1e-5)
+parser.add_argument("--lr1", type=float, default=1e-6)
+parser.add_argument("--lr2", type=float, default=1e-6)
 parser.add_argument("--lr3", type=float, default=1e-4)
 parser.add_argument("--tau", type=float, default=0.005)
 parser.add_argument("--alpha", type=float, default=2.2)
 parser.add_argument("--episode", type=float, default=2000)
 parser.add_argument("--gamma", type=float, default=0.9)
-parser.add_argument("--batch_size", type=float, default=512)
+parser.add_argument("--batch_size", type=float, default=126)
 parser.add_argument("--memory_size", type=float, default=100000)
 parser.add_argument("--balance", type=float, default=14560.05)
 parser.add_argument("--holding", type=float, default=5)
@@ -44,6 +45,17 @@ parameters= {
             }
 
 if __name__ == '__main__':
+
+    wandb.init(project='CDDT',
+               config={
+                   'learning_rate_1':args.lr1,
+                   'learning_rate_2':args.lr2,
+                   'learning_rate_3':args.lr3,
+                   'batch_size':args.batch_size,
+                   'memory_size':args.memory_size,
+                   'episode':args.episode,
+               })
+
 
     # Train Loop
     env = Environment(train_data)
@@ -88,6 +100,8 @@ if __name__ == '__main__':
                 v_loss, c_loss, a_loss = agent.update(*batch)
                 agent.soft_target_update()
 
+                wandb.log({'v_loss':v_loss, 'a_loss':a_loss, 'c_loss':c_loss}, step=steps)
+                
                 if done[0] & args.cons:
                     Jr, Jc = agent.update_lam(batch[0])
                     Jrs.append(Jr)

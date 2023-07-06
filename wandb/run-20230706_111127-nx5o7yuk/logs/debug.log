@@ -1,0 +1,26 @@
+2023-07-06 11:11:27,933 INFO    MainThread:16047 [wandb_setup.py:_flush():76] Current SDK version is 0.15.5
+2023-07-06 11:11:27,934 INFO    MainThread:16047 [wandb_setup.py:_flush():76] Configure stats pid to 16047
+2023-07-06 11:11:27,934 INFO    MainThread:16047 [wandb_setup.py:_flush():76] Loading settings from /home/hyunjun/.config/wandb/settings
+2023-07-06 11:11:27,934 INFO    MainThread:16047 [wandb_setup.py:_flush():76] Loading settings from /home/hyunjun/workspace/PM (Safe DDT)/wandb/settings
+2023-07-06 11:11:27,934 INFO    MainThread:16047 [wandb_setup.py:_flush():76] Loading settings from environment variables: {}
+2023-07-06 11:11:27,934 INFO    MainThread:16047 [wandb_setup.py:_flush():76] Applying setup settings: {'_disable_service': False}
+2023-07-06 11:11:27,934 INFO    MainThread:16047 [wandb_setup.py:_flush():76] Inferring run settings from compute environment: {'program_relpath': 'main.py', 'program': '/home/hyunjun/workspace/PM (Safe DDT)/main.py'}
+2023-07-06 11:11:27,934 INFO    MainThread:16047 [wandb_init.py:_log_setup():507] Logging user logs to /home/hyunjun/workspace/PM (Safe DDT)/wandb/run-20230706_111127-nx5o7yuk/logs/debug.log
+2023-07-06 11:11:27,934 INFO    MainThread:16047 [wandb_init.py:_log_setup():508] Logging internal logs to /home/hyunjun/workspace/PM (Safe DDT)/wandb/run-20230706_111127-nx5o7yuk/logs/debug-internal.log
+2023-07-06 11:11:27,934 INFO    MainThread:16047 [wandb_init.py:init():547] calling init triggers
+2023-07-06 11:11:27,934 INFO    MainThread:16047 [wandb_init.py:init():554] wandb.init called with sweep_config: {}
+config: {'learning_rate_1': 1e-06, 'learning_rate_2': 1e-06, 'learning_rate_3': 0.0001, 'batch_size': 126, 'memory_size': 100000, 'episode': 2000}
+2023-07-06 11:11:27,934 INFO    MainThread:16047 [wandb_init.py:init():596] starting backend
+2023-07-06 11:11:27,934 INFO    MainThread:16047 [wandb_init.py:init():600] setting up manager
+2023-07-06 11:11:27,937 INFO    MainThread:16047 [backend.py:_multiprocessing_setup():106] multiprocessing start_methods=fork,spawn,forkserver, using: spawn
+2023-07-06 11:11:27,940 INFO    MainThread:16047 [wandb_init.py:init():606] backend started and connected
+2023-07-06 11:11:27,944 INFO    MainThread:16047 [wandb_init.py:init():705] updated telemetry
+2023-07-06 11:11:27,955 INFO    MainThread:16047 [wandb_init.py:init():738] communicating run to backend with 60.0 second timeout
+2023-07-06 11:11:28,470 INFO    MainThread:16047 [wandb_run.py:_on_init():2173] communicating current version
+2023-07-06 11:11:28,523 INFO    MainThread:16047 [wandb_run.py:_on_init():2182] got version response 
+2023-07-06 11:11:28,523 INFO    MainThread:16047 [wandb_init.py:init():789] starting run threads in backend
+2023-07-06 11:11:31,587 INFO    MainThread:16047 [wandb_run.py:_console_start():2152] atexit reg
+2023-07-06 11:11:31,587 INFO    MainThread:16047 [wandb_run.py:_redirect():2007] redirect: SettingsConsole.WRAP_RAW
+2023-07-06 11:11:31,587 INFO    MainThread:16047 [wandb_run.py:_redirect():2072] Wrapping output streams.
+2023-07-06 11:11:31,587 INFO    MainThread:16047 [wandb_run.py:_redirect():2097] Redirects installed.
+2023-07-06 11:11:31,587 INFO    MainThread:16047 [wandb_init.py:init():830] run started, returning control to user process
