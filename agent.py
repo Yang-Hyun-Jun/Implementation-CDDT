@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
+import numpy as np 
 from network import Network
-
 
 class Agent:
     def __init__(self, **kwargs):
@@ -33,10 +33,13 @@ class Agent:
             sample = sample.cpu().numpy()
             log_pi = log_pi.cpu().numpy()
             action = (sample - p)[1:]
+            
         return action, sample, log_pi
 
     def update(self, s, p, r, c, ns, log_pi, done):
-        
+        """
+        Lagrange relaxation based policy optimization
+        """
         eps_clip = 0.2
         log_pi_ = self.net.log_prob(s, p).unsqueeze(1)
         entropy = self.net.entropy(s).unsqueeze(1)
@@ -59,16 +62,14 @@ class Agent:
         c_loss = self.huber(c_value, c_target)
 
         # Actor loss
-        # td_advantage_r = r + self.gamma * self.net.value(ns) * (1-done) - value
-        # td_advantage_c = c + self.gamma * self.net.c_value(ns) * (1-done) - c_value
-        td_advantage_r = r + self.gamma * self.net.value(ns) * (1-done)
-        td_advantage_c = c + self.gamma * self.net.c_value(ns) * (1-done) 
+        td_advantage_r = r + self.gamma * self.net.value(ns) * (1-done) - value
+        td_advantage_c = c + self.gamma * self.net.c_value(ns) * (1-done) - c_value
         td_advantage = (td_advantage_r - self.lam * td_advantage_c).detach()
 
         surr1 = ratio * td_advantage
         surr2 = torch.clamp(ratio, 1-eps_clip, 1+eps_clip) * td_advantage
 
-        a_loss = -torch.min(surr1, surr2) - 0.01 * entropy
+        a_loss = -torch.min(surr1, surr2) - 0.0 * entropy
         a_loss = a_loss.mean()
         
         # Update
@@ -76,7 +77,7 @@ class Agent:
         self.optimizer.zero_grad()
         loss.backward()
         self.optimizer.step()
-        return v_loss, c_loss, a_loss
+        return v_loss, c_loss, a_loss, entropy.mean()
 
     def update_lam(self, s):
         with torch.no_grad():

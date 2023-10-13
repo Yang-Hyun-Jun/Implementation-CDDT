@@ -12,27 +12,27 @@ class Network(nn.Module):
         self.F = F
 
         self.score_net = nn.Sequential(
-            nn.Linear(F * K, 512),
-            nn.LeakyReLU(),
-            nn.Linear(512, 256),
-            nn.LeakyReLU(),
-            nn.Linear(256, K),
+            nn.Linear(F * K, 128),
+            nn.ReLU(),
+            nn.Linear(128, 128),
+            nn.ReLU(),
+            nn.Linear(128, K),
             )
 
         self.value_net = nn.Sequential(
-            nn.Linear(F * K , 512),
-            nn.LeakyReLU(),
-            nn.Linear(512, 256),
-            nn.LeakyReLU(),
-            nn.Linear(256, 1),            
+            nn.Linear(F * K , 128),
+            nn.ReLU(),
+            nn.Linear(128, 128),
+            nn.ReLU(),
+            nn.Linear(128, 1),            
             )
 
         self.const_net = nn.Sequential(
-            nn.Linear(F * K, 512),
-            nn.LeakyReLU(),
-            nn.Linear(512, 256),
-            nn.LeakyReLU(),
-            nn.Linear(256, 1),
+            nn.Linear(F * K, 128),
+            nn.ReLU(),
+            nn.Linear(128, 128),
+            nn.ReLU(),
+            nn.Linear(128, 1),
             )
 
     def forward(self, x):
@@ -73,7 +73,7 @@ class Network(nn.Module):
         state = state.reshape(-1, self.F * self.K)
         scores = self(state).reshape(-1, self.K)
         scores = torch.clamp(scores, -40., 500.)
-        alpha = torch.exp(scores) + 1
+        alpha = torch.exp(scores) + 1.0 
         return alpha
 
     def log_prob(self, state, portfolio):
@@ -109,3 +109,4 @@ class Network(nn.Module):
             sampled_p = dirichlet.sample([1])[0]
         
         return sampled_p
+    

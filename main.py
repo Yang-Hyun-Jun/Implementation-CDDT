@@ -3,9 +3,7 @@ import numpy as np
 import wandb
 import argparse
 import torch
-import utils
 import viz 
-import os
 
 from env import Environment
 from memory import ReplayMemory
@@ -16,20 +14,20 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--seed", type=int, default=1)
 parser.add_argument("--lr1", type=float, default=1e-6)
 parser.add_argument("--lr2", type=float, default=1e-6)
-parser.add_argument("--lr3", type=float, default=1e-4)
+parser.add_argument("--lr3", type=float, default=5e-4)
 parser.add_argument("--tau", type=float, default=0.005)
-parser.add_argument("--alpha", type=float, default=2.2)
+parser.add_argument("--alpha", type=float, default=2.5)
 parser.add_argument("--episode", type=float, default=2000)
 parser.add_argument("--gamma", type=float, default=0.9)
-parser.add_argument("--batch_size", type=float, default=126)
+parser.add_argument("--batch_size", type=float, default=128)
 parser.add_argument("--memory_size", type=float, default=100000)
 parser.add_argument("--balance", type=float, default=14560.05)
 parser.add_argument("--holding", type=float, default=5)
-parser.add_argument("--cons", type=bool, default=False)
+parser.add_argument("--cons", type=bool, default=True)
 args = parser.parse_args()
 
-train_data = np.load('Data/train_data_tensor_90.npy')
-test_data = np.load('Data/test_data_tensor_90.npy')
+train_data = np.load('Data/train_data_tensor_10.npy')
+test_data = np.load('Data/test_data_tensor_10.npy')
 
 K = train_data.shape[1]
 F = train_data.shape[2]
@@ -46,16 +44,15 @@ parameters= {
 
 if __name__ == '__main__':
 
-    wandb.init(project='CDDT',
-               config={
-                   'learning_rate_1':args.lr1,
-                   'learning_rate_2':args.lr2,
-                   'learning_rate_3':args.lr3,
-                   'batch_size':args.batch_size,
-                   'memory_size':args.memory_size,
-                   'episode':args.episode,
-               })
-
+    # wandb.init(project='CDDT',
+    #            config={
+    #                'learning_rate_1':args.lr1,
+    #                'learning_rate_2':args.lr2,
+    #                'learning_rate_3':args.lr3,
+    #                'batch_size':args.batch_size,
+    #                'memory_size':args.memory_size,
+    #                'episode':args.episode,
+    #            })
 
     # Train Loop
     env = Environment(train_data)
@@ -70,7 +67,7 @@ if __name__ == '__main__':
     for epi in range(1, args.episode+1):
         Jr, Jc = 0, 0
         steps, cumr, cumc = 0, 0, 0
-        a_loss, v_loss, c_loss = None, None, None
+        a_loss, v_loss, c_loss, entropy = None, None, None, None
         state = env.reset(args.balance)
 
         while True:
@@ -97,10 +94,13 @@ if __name__ == '__main__':
             if (len(memory) >= args.batch_size):
                 batch = memory.sample(args.batch_size)
                 batch = make_batch(batch)
-                v_loss, c_loss, a_loss = agent.update(*batch)
+                v_loss, c_loss, a_loss, entropy = agent.update(*batch)
                 agent.soft_target_update()
 
-                wandb.log({'v_loss':v_loss, 'a_loss':a_loss, 'c_loss':c_loss}, step=steps)
+                # wandb.log({'v_loss':v_loss, 
+                #            'a_loss':a_loss, 
+                #            'c_loss':c_loss,
+                #            'entropy':entropy})
                 
                 if done[0] & args.cons:
                     Jr, Jc = agent.update_lam(batch[0])
@@ -111,12 +111,9 @@ if __name__ == '__main__':
                 PVs.append(env.portfolio_value)
                 PFs.append(env.profitloss)
 
-                if done[0]:
-                    pd.DataFrame({"Profitloss":PFs}).to_csv(f"Metrics/seed{args.seed}/Profitloss_Train")
-                    pd.DataFrame({"PV":PVs}).to_csv(f"Metrics/seed{args.seed}/Portfolio_Value_Train")
-                    pd.DataFrame({"Jr":Jrs}).to_csv(f"Metrics/seed{args.seed}/Jr")
-                    pd.DataFrame({"Jc":Jcs}).to_csv(f"Metrics/seed{args.seed}/Jc")
-                    torch.save(agent.net.score_net.state_dict(), f'Metrics/seed{args.seed}/actor.pth')
+            if (epi == args.episode) & done[0]:
+                pd.DataFrame({'Jr':Jrs}).to_csv(f'Metrics/seed{args.seed}/Jr')
+                pd.DataFrame({'Jc':Jcs}).to_csv(f'Metrics/seed{args.seed}/Jc')
 
             if done[0]:
                 print(f"epi:{epi}")
@@ -174,5 +171,4 @@ if __name__ == '__main__':
             pd.DataFrame(POs).to_csv(f'Metrics/seed{args.seed}/Portfolios_Test_{mode}')
             break
 
-        
 viz.show(args.seed, size=(20,8))

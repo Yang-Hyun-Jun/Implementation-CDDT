@@ -1,6 +1,23 @@
 import numpy as np
 import pmenv
 
+"""
+[P10]
+cost = 1 if self.profitloss < -1.0 else 0
+[P90]
+cost = 1 if self.profitloss < -1.0 else 0
+
+[R10]
+cost = 1 if sample[0] <= 0.1 else 0
+[R90]
+cost = 1 if sample[0] <= 0.003 else 0
+
+[N10]
+cost = 1 if len(p[p>0.05]) >= 8 else 0
+[N90]
+cost = 1 if len(p[p>0.005]) >= 65 else 0
+"""
+
 class Environment(pmenv.Environment):
     def __init__(self, stock_tensor=None):
         """
@@ -28,7 +45,7 @@ class Environment(pmenv.Environment):
         """
         Constrained Optimization을 위한 Cost 함수
         """
-        cost = 1 if p[0] <= 0.003 else 0 
+        cost = 1 if len(p[p>0.05]) >= 8 else 0 
         return cost
     
     def get_state(self, observation, portfolio):
