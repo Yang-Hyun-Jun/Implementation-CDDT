@@ -44,16 +44,6 @@ parameters= {
 
 if __name__ == '__main__':
 
-    # wandb.init(project='CDDT',
-    #            config={
-    #                'learning_rate_1':args.lr1,
-    #                'learning_rate_2':args.lr2,
-    #                'learning_rate_3':args.lr3,
-    #                'batch_size':args.batch_size,
-    #                'memory_size':args.memory_size,
-    #                'episode':args.episode,
-    #            })
-
     # Train Loop
     env = Environment(train_data)
     memory = ReplayMemory(args.memory_size)
@@ -96,11 +86,6 @@ if __name__ == '__main__':
                 batch = make_batch(batch)
                 v_loss, c_loss, a_loss, entropy = agent.update(*batch)
                 agent.soft_target_update()
-
-                # wandb.log({'v_loss':v_loss, 
-                #            'a_loss':a_loss, 
-                #            'c_loss':c_loss,
-                #            'entropy':entropy})
                 
                 if done[0] & args.cons:
                     Jr, Jc = agent.update_lam(batch[0])
